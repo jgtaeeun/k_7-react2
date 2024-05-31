@@ -58,7 +58,7 @@ export default function Home() {
                 <div className='W-full flex items-center justify-start'>
                     <p className='p-3 font-bold '>Password</p>
                 </div>
-                <input type='text' id='email'  ref={refpassword} className='bg-blue-100 p-3 rounded-md'></input>
+                <input type='password' id='password'  ref={refpassword} className='bg-blue-100 p-3 rounded-md'></input>
 
                 <button className='inline-flex  rounded-md  bg-blue-500 text-white font-bold mt-5 p-5'
                         onClick={handlebt}>{isLogin ? 'Sign out':'Sign in'}</button>

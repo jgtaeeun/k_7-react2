@@ -1,7 +1,15 @@
 import { useRef ,useEffect, useState } from "react"
 
 
+
 export default function Information() {
+
+  //날짜 선택 데이터 ------------4
+  const refdate=useRef();
+  const [date, setDate] =useState([]);
+  //시간 선택 데이터 --------4
+  const reftime=useRef()
+  const [time, setTime] =useState([]);
    //정보 데이터------------------3
   const [airinfo, setAirinfo] =useState([]); 
   //선택된 위치---------------------------1
@@ -10,6 +18,8 @@ export default function Information() {
   const [refuseoption, setRefuseoption] =useState([]);
   const changeselect=()=>{
             setRefuseoption(refoption.current.value)
+            setDate(refdate.current.value)
+            setTime(reftime.current.value)
   }
 
   //선택된 지역에 대한 정보 딕셔너리 (공기, 위치, 날짜 등)//------------------2
@@ -44,23 +54,30 @@ export default function Information() {
                             '덕천역대합실':203131,   '동래역4호선대합실':204021,   '남포역대합실':201111, '서면역1호선대합실':201191
                         }
         
-        if (!refuseoption) return;
+        if( (!refuseoption)||(!refdate.current.value)||(!reftime.current.value)) return;
         console.log(refuseoption)
         
        //areaidx는 선택된 지역에 대한 코드이다. (숫자)
         let areaidx = dicoptags[refuseoption]  
         console.log(areaidx)
 
+        //날짜에서 - 빼기
+       let selectdate = date.replaceAll('-','')
+
         let url = `http://apis.data.go.kr/6260000/IndoorAirQuality/getIndoorAirQualityByStation?serviceKey=${process.env.REACT_APP_API_KEY}`
-        url=url + `&pageNo=1&numOfRows=5&resultType=json&controlnumber=2024053008&areaIndex=${areaidx}`
+        url=url + `&pageNo=1&numOfRows=5&resultType=json&controlnumber=${selectdate}${time}&areaIndex=${areaidx}`
         console.log(url)
         getFetchData(url)
-    },[refuseoption])
-
+    },[refuseoption, date, time])
+   
   return (
     <div className='w-2/3 h-full flex flex-col justify-start items-center'>
             <div className='w-full flex justify-center items-center p-10'>
-                 <select id='locOps' className='w-2/3 bg-slate-300' ref={refoption} onChange={changeselect}>
+                 <div className='w-1/2 flex justify-center items-center p-10'>
+                  <input type='date' className="w-3/4 m-2" ref={refdate} onChange={changeselect}></input>
+                  <input type='number' className="w-1/4 bg-slate-100"  ref={reftime} onChange={changeselect}></input>
+                 </div>
+                 <select id='locOps' className='w-1/2 bg-slate-300' ref={refoption} onChange={changeselect}>
                     <option defaultValue=''>---지역선택---</option>  
                     <option>서면역1호선승강장</option> <option>서면역2호선대합실</option>
                     <option>서면역2호선승강장</option><option>사상역대합실</option>
